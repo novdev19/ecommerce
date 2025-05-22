@@ -22,4 +22,6 @@ public interface IProductService {
     List<Product> getProductsByName(String name);
 
     List<ProductDto> getConvertedProducts(List<Product> products);
+
+    ProductDto convertToDto(Product product);
 }
