@@ -13,9 +13,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByBrandAndName(String brand, String name);
 
-    @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))")
+ //   @Query("SELECT p FROM Product p WHERE LOWER(p.brand) LIKE LOWER(CONCAT('%', :brand, '%'))")
     List<Product> findByBrand(String brand);
 
+    @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))")
     List<Product> findByName(String name);
 
     boolean existsByNameAndBrand(String name, String brand);

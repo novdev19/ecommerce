@@ -8,8 +8,6 @@ import com.dailycodework.buynowdotcom.service.product.IProductService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.sql.rowset.serial.SerialBlob;
@@ -32,7 +30,7 @@ public class ImageService implements IImageService {
 
     @Override
     public void deleteImageById(Long imageId) {
-        imageRepository.findById(imageId).ifPresentOrElse(imageRepository :: delete, () -> {
+        imageRepository.findById(imageId).ifPresentOrElse(imageRepository::delete, () -> {
             throw new EntityNotFoundException("Image not found!");
         });
     }
@@ -45,10 +43,8 @@ public class ImageService implements IImageService {
             image.setFileType(file.getContentType());
             image.setImage(new SerialBlob(file.getBytes()));
             imageRepository.save(image);
-
         } catch (IOException | SQLException e) {
             throw new RuntimeException(e.getMessage());
-
         }
     }
 
