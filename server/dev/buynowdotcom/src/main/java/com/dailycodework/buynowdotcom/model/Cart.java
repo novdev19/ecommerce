@@ -29,12 +29,23 @@ public class Cart {
     private Set<CartItem> items = new HashSet<>();
 
     public void removeItem(CartItem cartItem) {
-//        this.items.remove(cartItem);
-//        cartItem.setCart(null);
-//        updateTotalAmount();
+        this.items.remove(cartItem);
+        cartItem.setCart(null);
+        updateTotalAmount();
+    }
+
+    public void addItem(CartItem cartItem) {
+        this.items.add(cartItem);
+        cartItem.setCart(this);
+        updateTotalAmount();
     }
 
     private void updateTotalAmount() {
 
+    }
+
+    public void clearCart() {
+        this.items.clear();
+        updateTotalAmount();
     }
 }
