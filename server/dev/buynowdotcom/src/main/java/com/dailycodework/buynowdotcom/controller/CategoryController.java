@@ -17,7 +17,7 @@ import static org.springframework.http.HttpStatus.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${api.prefix}/categories")
-public class CategoryController {
+public class  CategoryController {
     private final ICategoryService categoryService;
 
     @GetMapping("/all")
