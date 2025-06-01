@@ -1,12 +1,7 @@
 package com.dailycodework.buynowdotcom.service.user;
 
-import com.dailycodework.buynowdotcom.dtos.ImageDto;
 import com.dailycodework.buynowdotcom.dtos.UserDto;
-import com.dailycodework.buynowdotcom.model.CartItem;
-import com.dailycodework.buynowdotcom.model.Order;
 import com.dailycodework.buynowdotcom.model.User;
-import com.dailycodework.buynowdotcom.repository.CartItemRepository;
-import com.dailycodework.buynowdotcom.repository.OrderItemRepository;
 import com.dailycodework.buynowdotcom.repository.UserRepository;
 import com.dailycodework.buynowdotcom.request.CreateUserRequest;
 import com.dailycodework.buynowdotcom.request.UserUpdateRequest;
@@ -14,9 +9,12 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,9 +22,8 @@ import java.util.Optional;
 public class UserService implements IUserService {
 
     private final UserRepository userRepository;
-    private final CartItemRepository cartItemRepository;
-    private final OrderItemRepository orderItemRepository;
     private final ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User createUser(CreateUserRequest request) {
@@ -37,7 +34,7 @@ public class UserService implements IUserService {
                     user.setFirstName(request.getFirstName());
                     user.setLastName(request.getLastName());
                     user.setEmail(request.getEmail());
-                    user.setPassword(request.getPassword());
+                    user.setPassword(passwordEncoder.encode(request.getPassword()));
                     return userRepository.save(user);
                 }).orElseThrow(() -> new EntityExistsException("Oops! " + request.getEmail() + " already exists"));
     }
@@ -66,11 +63,21 @@ public class UserService implements IUserService {
     }
 
 
-
     @Override
     public UserDto convertUserToDto(User user) {
         UserDto userDto = modelMapper.map(user, UserDto.class);
         return userDto;
+    }
+
+    @Override
+    public User getAuthenticatedUser() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        System.out.println("Security Context: " + securityContext.getAuthentication().getName());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        System.out.println("@@@@@@ UserService  email: " + email);
+        return Optional.ofNullable(userRepository.findByEmail(email))
+                .orElseThrow(() -> new EntityNotFoundException("Log in required!"));
     }
 
 }

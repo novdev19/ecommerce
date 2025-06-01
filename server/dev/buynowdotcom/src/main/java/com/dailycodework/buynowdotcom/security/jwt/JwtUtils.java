@@ -33,12 +33,12 @@ public class JwtUtils {
     private String expirationTime;
     @Value("${auth.token.refreshExpirationInMils}")
     private String refreshExpirationTime;
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-            throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
+//
+//    @Bean
+//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+//            throws Exception {
+//        return authenticationConfiguration.getAuthenticationManager();
+//    }
 
     public String generateAccessTokenForUser(Authentication authentication) {
     ShopUserDetails userPrincipal = (ShopUserDetails) authentication.getPrincipal();
